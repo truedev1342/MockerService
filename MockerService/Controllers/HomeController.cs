@@ -15,6 +15,7 @@ namespace MockerService.Controllers
 
         public IActionResult Index()
         {
+            ViewData["baseURL"] = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
             return View();
         }
 
