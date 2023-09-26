@@ -1,0 +1,222 @@
+﻿@*
+*@
+@{
+    ViewData["Title"] = "Mocker";
+    var pageData = ViewData["pageData"];
+    var projectData = ViewData["projectData"];
+    var Pages = ViewData["Pages"];
+    string mainPage = (string)ViewData["MainPage"];
+}
+
+
+<!-- Sidebar -->
+<ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar">
+    <!-- Nav Item - Dashboard -->
+    <li class="nav-item">
+        <a class="nav-link" href="#"><i class="fas fa-fw fa-film"></i></a>
+    </li>
+    <!-- Divider -->
+    <hr class="sidebar-divider"/>
+    <li class="nav-item">
+        <a class="nav-link" href="#"><i class="fa fa-home"></i></a>
+    </li>
+    <li class="nav-item active">
+        <a class="nav-link" href="#"><i class="fas fa-fw fa-border-all"></i></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#"><i class="fas fa-comment-dots"></i></a>
+    </li>
+    <hr class="sidebar-divider"/>
+    <li class="nav-item">
+        <a class="nav-link" href="#"><i class="fas fa-fw fa-compass"></i></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#"><i class="fas fa-fw fa-file"></i></a>
+    </li>
+    <hr class="sidebar-divider"/>
+    <li class="nav-item" style="position:absolute; bottom:0px">
+        <a class="nav-link" href="#"><i class="fas fa-user-circle"></i></a>
+    </li>
+</ul>
+<!-- End of Sidebar -->
+
+
+<!-- Content Wrapper -->
+<div id="content-wrapper" class="d-flex flex-column">
+    <!-- Main Content -->
+    <div id="content">
+        <!-- Begin Page Content -->
+        <div class="row h-100 px-2">
+            <div class="col-2 bg-white border-right">
+                <div class="row bg-gray-200 px-4 py-2">
+                    <input type="text" class="w-100" placeholder="Search screens..." />
+                </div>
+                @foreach (var item in @Pages as List<string>)
+                {
+                    @if (item == mainPage)
+                    {
+                        <div class="row py-2">
+                            <div class="card w-100 mx-2 p-2" onclick="drawPage('@item')">
+                                <h7 class="card-title" style="color:blue;">@item</h7>
+                                @{
+                                    var imgStr = @ViewData["baseURL"] + "/uploads/" + @ViewData["path"] + "/screenshots/" + @item + ".png";
+                                }
+                                <img src='@imgStr' class="card-img" alt="...">
+                                <div class="m-2"  style="position:absolute; right:0px; bottom:0px;color:#4b6dcf;">
+                                    <i class="fa fa-home"></i>
+                                </div>
+                            </div>
+                        </div>
+                    } else
+                    {
+                        <div class="row py-2">
+                            <div class="card w-100 mx-2 p-2" onclick="drawPage('@item')">
+                                <h7 class="card-title" style="color:blue;">@item</h7>
+                                @{
+                                    var imgStr = @ViewData["baseURL"] + "/uploads/" + @ViewData["path"] + "/screenshots/" + @item + ".png";
+                                }
+                                <img src='@imgStr' class="card-img" alt="...">
+                            </div>
+                        </div>     
+                    }
+
+                }
+            </div>
+            <div class="col-10 h-100" id="pageContent">
+                
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+    <!-- End of Main Content -->
+</div>
+<!-- End of Content Wrapper -->
+
+@section Scripts {
+    <script>
+        var project;
+        var page;
+        var current_page = "";
+        function drawPage(p) {
+            if (p == "") return;
+            if (p == null) return;
+            if (p == "NULL") return;
+            current_page = p;
+            var html = "";
+            var imgURL = '@ViewData["baseURL"]/img/iphone7-portrait.svg';
+            if (project.Device == "iPhone 7") {
+                imgURL = '@ViewData["baseURL"]/img/iphone7-portrait.svg';
+            } else {
+                imgURL = '@ViewData["baseURL"]/img/iphone7-landscape.svg';
+            }
+            html += '<div style="height: 100px"> </div><div class="mx-auto my-auto" style="width:' + project.size.W + 'px; height:' + project.size.H + 'px; background:url(\'' + imgURL + '\'); background-size: ' + project.size.W + 'px ' + project.size.H + 'px; background-repeat:no-repeat">';
+            var curPage = null;
+            for (var i in page) {
+                if (page[i].pageTitle == p) {
+                    curPage = page[i];
+                    break;
+                }
+            }
+            html += ' <div style="height: 12%"></div><div style="height: 76%; margin-left: 7%; margin-right: 6%; position: relative; background-color: ' + curPage.background + '" >'
+            var content = curPage.Contents;
+            for (var i in content) {
+                if (content[i].Name == "Button") {
+                    var style = "position: absolute; ";
+                    if ('x' in content[i]) style += "left: " + content[i].x + "px;";
+                    if ('y' in content[i]) style += "top: " + content[i].y + "px;";
+                    if ('w' in content[i]) style += "width: " + content[i].w + "px;";
+                    if ('h' in content[i]) style += "height: " + content[i].h + "px;";
+                    if ('Background' in content[i]) style += "background: " + content[i].Background + ";";
+                    if ('BorderColor' in content[i]) style += "border-color: " + content[i].BorderColor + ";";
+                    if ('BorderRound' in content[i]) {
+                        style += "border-top-left-radius: " + content[i].BorderRound.TopLeft + "px;";
+                        style += "border-top-right-radius: " + content[i].BorderRound.TopRight + "px;";
+                        style += "border-bottom-right-radius: " + content[i].BorderRound.BottomRight + "px;";
+                        style += "border-bottom-left-radius: " + content[i].BorderRound.BottomLeft + "px;";
+                    }
+                    if ('BorderThickness' in content[i]) {
+                        style += "border-top-width: " + content[i].BorderThickness.Top + "px;";
+                        style += "border-bottom-width: " + content[i].BorderThickness.Bottom + "px;";
+                        style += "border-left-width: " + content[i].BorderThickness.Left + "px;";
+                        style += "border-right-width: " + content[i].BorderThickness.Right + "px;";
+                    }
+                    if ('Foreground' in content[i]) style += "color: " + content[i].Foreground + ";";
+                    if ('Opacity' in content[i]) style += "opacity: " + content[i].Opacity + ";";
+                    if ('fontSize' in content[i]) style += "font-size: " + content[i].fontSize + "px;";
+                    if ('fontFamily' in content[i]) style += "font-family: '" + content[i].fontFamily.Name + "';";
+
+
+                    html += '<input type = "button" value="' + content[i].Text + '" onclick = "drawPage(\'' + content[i].TapEvent + '\');") ondblclick="drawPage(\'' + content[i].DTapEvent + '\');" style = "' + style + '"/>';
+                }
+
+                if (content[i].Name == "TextBox") {
+                    var style = "position: absolute; ";
+                    if ('x' in content[i]) style += "left: " + content[i].x + "px;";
+                    if ('y' in content[i]) style += "top: " + content[i].y + "px;";
+                    if ('w' in content[i]) style += "width: " + content[i].w + "px;";
+                    if ('h' in content[i]) style += "height: " + content[i].h + "px;";
+                    if ('Background' in content[i]) style += "background: " + content[i].Background + ";";
+                    if ('BorderColor' in content[i]) style += "border-color: " + content[i].BorderColor + ";";
+                    if ('BorderRound' in content[i]) {
+                        style += "border-top-left-radius: " + content[i].BorderRound.TopLeft + "px;";
+                        style += "border-top-right-radius: " + content[i].BorderRound.TopRight + "px;";
+                        style += "border-bottom-right-radius: " + content[i].BorderRound.BottomRight + "px;";
+                        style += "border-bottom-left-radius: " + content[i].BorderRound.BottomLeft + "px;";
+                    }
+                    if ('BorderThickness' in content[i]) {
+                        style += "border-top-width: " + content[i].BorderThickness.Top + "px;";
+                        style += "border-bottom-width: " + content[i].BorderThickness.Bottom + "px;";
+                        style += "border-left-width: " + content[i].BorderThickness.Left + "px;";
+                        style += "border-right-width: " + content[i].BorderThickness.Right + "px;";
+                    }
+                    if ('Foreground' in content[i]) style += "color: " + content[i].Foreground + ";";
+                    if ('fontFamily' in content[i]) style += "font-family: '" + content[i].fontFamily.Name + "';";
+                    if ('Opacity' in content[i]) style += "opacity: " + content[i].Opacity + ";";
+                    if ('fontSize' in content[i]) style += "font-size: " + content[i].fontSize + "px;";
+                    if ('isBold' in content[i] && content[i].isBold == true ) style += "font-weight: bold;";
+                    if ('isItalic' in content[i] && content[i].isItalic == true) style += "font-style: italic;";
+
+                    html += '<input type = "text" value = "' + content[i].Text + '" style = "' + style + '"/>';
+                }
+
+                if (content[i].Name == "Label") {
+                    var style = "position: absolute; ";
+                    if ('x' in content[i]) style += "left: " + content[i].x + "px;";
+                    if ('y' in content[i]) style += "top: " + content[i].y + "px;";
+                    if ('w' in content[i]) style += "width: " + content[i].w + "px;";
+                    if ('h' in content[i]) style += "height: " + content[i].h + "px;";
+                    if ('Background' in content[i]) style += "background: " + content[i].Background + ";";
+                    if ('BorderColor' in content[i]) style += "border-color: " + content[i].BorderColor + ";";
+                    if ('BorderRound' in content[i]) {
+                        style += "border-top-left-radius: " + content[i].BorderRound.TopLeft + "px;";
+                        style += "border-top-right-radius: " + content[i].BorderRound.TopRight + "px;";
+                        style += "border-bottom-right-radius: " + content[i].BorderRound.BottomRight + "px;";
+                        style += "border-bottom-left-radius: " + content[i].BorderRound.BottomLeft + "px;";
+                    }
+                    if ('BorderThickness' in content[i]) {
+                        style += "border-top-width: " + content[i].BorderThickness.Top + "px;";
+                        style += "border-bottom-width: " + content[i].BorderThickness.Bottom + "px;";
+                        style += "border-left-width: " + content[i].BorderThickness.Left + "px;";
+                        style += "border-right-width: " + content[i].BorderThickness.Right + "px;";
+                    }
+                    if ('Foreground' in content[i]) style += "color: " + content[i].Foreground + ";";
+                    if ('fontFamily' in content[i]) style += "font-family: '" + content[i].fontFamily.Name + "';";
+                    if ('Opacity' in content[i]) style += "opacity: " + content[i].Opacity + ";";
+                    if ('fontSize' in content[i]) style += "font-size: " + content[i].fontSize + "px;";
+                    if ('isBold' in content[i] && content[i].isBold == true ) style += "font-weight: bold;";
+                    if ('isItalic' in content[i] && content[i].isItalic == true) style += "font-style: italic;";
+
+                    html += '<Label style = "' + style + '">' + content[i].Text + '</Label>';
+                }
+            }
+            html += '</div><div style="height: 12%"></div></div>';
+            $("#pageContent").html(html);
+        }
+        $(document).ready(function() {
+            project = @Html.Raw(@projectData);
+            page = @Html.Raw(@pageData);
+            current_page = project.MainPage;
+            drawPage(project.MainPage);
+        });
+    </script>
+}

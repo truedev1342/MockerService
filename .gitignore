@@ -1,0 +1,6 @@
+/.vs
+/MockerService/bin
+/MockerService/obj
+/MockerService/wwwroot/uploads
+/.idea
+/.vscode

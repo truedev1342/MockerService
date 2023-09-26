@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using MockerService.Models;
+
+namespace MockerService.Data
+{
+    public class MockerServiceContext : DbContext
+    {
+        public MockerServiceContext(DbContextOptions<MockerServiceContext> options)
+            : base(options)
+        {
+        }
+
+        public DbSet<MockerService.Models.Project> Project { get; set; }
+    }
+}
