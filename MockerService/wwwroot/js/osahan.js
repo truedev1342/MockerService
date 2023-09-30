@@ -7,7 +7,6 @@ Version: 1.0
 
 (function($) {
   "use strict"; // Start of use strict
-
   // Toggle the side navigation
   $("#sidebarToggle, #sidebarToggleTop").on('click', function(e) {
     $("body").toggleClass("sidebar-toggled");
@@ -89,3 +88,77 @@ Version: 1.0
   });
 
 })(jQuery); // End of use strict
+
+var iconState;
+var isHighlight;
+var isDesign;
+
+function toggleSidebar() {
+  $("#mainSidebar").toggleClass("hide");
+  if ($("#mainSidebar").hasClass("hide")) {
+    document.getElementById("btnToolbar").setAttribute("title", "Show toolbar");
+    $("#paneTable").removeClass("col-3");
+    $("#paneTable").addClass("hide2");
+    $("#pageContent").removeClass("col-9");
+    $("#pageContent").addClass("col-12");
+  } else {
+    document.getElementById("btnToolbar").setAttribute("title", "Hide toolbar"); 
+    if (iconState != 1) {
+      $("#paneTable").addClass("col-3");
+      $("#paneTable").removeClass("hide2");
+      $("#pageContent").addClass("col-9");
+      $("#pageContent").removeClass("col-12");
+    }
+  }
+}
+
+function toggleIcon(n) {
+  $("#itemHome").removeClass("active");
+  $("#itemTable").removeClass("active");
+  $("#itemComment").removeClass("active");
+  $("#iconHome").removeClass("active");
+  $("#iconTable").removeClass("active");
+  $("#iconComment").removeClass("active");
+  if (n == 1) {
+    $("#itemHome").addClass("active");
+    $("#iconHome").addClass("active");
+  }
+  if (n == 2) {
+    $("#itemTable").addClass("active");
+    $("#iconTable").addClass("active");
+    
+    $("#paneTable").addClass("col-3");
+    $("#paneTable").removeClass("hide2");
+    $("#pageContent").addClass("col-9");
+    $("#pageContent").removeClass("col-12");
+  }
+  if (n == 3) {
+    $("#itemComment").addClass("active");
+    $("#iconComment").addClass("active");
+  }
+  iconState = n;
+}
+
+function toggleHighlight() {
+  $("#itemHighlight").toggleClass("active");
+  $("#iconHighlight").toggleClass("active");
+  if ($("#iconHighlight").hasClass("active")) {
+    document.getElementById("iconHighlight").setAttribute("title", "Turn OFF interaction highlight"); 
+    isHighlight = 1;
+  } else {
+    document.getElementById("iconHighlight").setAttribute("title", "Turn ON interaction highlight"); 
+    isHighlight = 0;
+  }
+}
+
+function toggleDesign() {
+  $("#itemDesign").toggleClass("active");
+  $("#iconDesign").toggleClass("active");
+  if ($("#iconDesign").hasClass("active")) {
+    document.getElementById("iconDesign").setAttribute("title", "Turn OFF design annotations"); 
+    isDesign = 1;
+  } else {
+    document.getElementById("iconDesign").setAttribute("title", "Turn ON design annotations"); 
+    isDesign = 0;
+  }
+}

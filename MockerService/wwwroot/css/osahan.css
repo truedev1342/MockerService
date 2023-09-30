@@ -5,7 +5,7 @@ Author URI: https://themeforest.net/user/askbootstrap
 Version: 1.0
 */
 
-@import url('https://fonts.googleapis.com/css?family=Be+Vietnam:100,100i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i&display=swap');
+/*@import url('https://fonts.googleapis.com/css?family=Be+Vietnam:100,100i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i&display=swap');*/
 *,
 *::before,
 *::after {
@@ -13,7 +13,7 @@ Version: 1.0
 }
 
 html {
-  font-family: 'Be Vietnam', sans-serif;
+  font-family: sans-serif;
   line-height: 1.15;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
@@ -4164,6 +4164,7 @@ input[type="button"].btn-block {
   flex-direction: column;
   padding-left: 0;
   margin-bottom: 0;
+  margin-top: 3rem;
   list-style: none;
 }
 
@@ -10101,7 +10102,7 @@ a:focus {
   transform: scale(0.7);
   transform-origin: top right;
   right: .25rem;
-  margin-top: -.25rem;
+  margin-top: 3rem;
 }
 
 .sidebar .nav-item .nav-link .img-profile,
@@ -10628,28 +10629,6 @@ a:focus {
   color: rgba(255, 255, 255, 0.5);
 }
 
-.btn-circle {
-  border-radius: 100%;
-  height: 2.5rem;
-  width: 2.5rem;
-  font-size: 1rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn-circle.btn-sm, .btn-group-sm > .btn-circle.btn {
-  height: 1.8rem;
-  width: 1.8rem;
-  font-size: 0.75rem;
-}
-
-.btn-circle.btn-lg, .btn-group-lg > .btn-circle.btn {
-  height: 3.5rem;
-  width: 3.5rem;
-  font-size: 1.35rem;
-}
-
 .btn-icon-split {
   padding: 0;
   overflow: hidden;
@@ -11168,4 +11147,89 @@ body.sidebar-toggled footer.sticky-footer {
 .card:focus-within {
   background-color: #e9ecef; /* Using the same color as selected nav items */
   box-shadow: 0 0 1rem rgba(0,0,0,0.15);
+}
+.sidebar-toggle-btn {
+  position: absolute;
+  left: 0px;
+  top:0px;
+  width: 3rem !important;
+  height: 3rem !important;
+  border: 0;
+  background-color: #1f2533;
+  color: #858796;
+  text-align: center;
+  padding-top: 1rem;
+}
+.sidebar-toggle-btn:hover,
+.sidebar-toggle-btn:focus {
+  background-color: #4c5872 !important;
+  border: 0;
+}
+
+.sidebar-toggle-btn a {
+  color: #858796;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+.sidebar-toggle-btn a {
+  color: #858796;
+  text-decoration: none;
+  background-color: transparent;
+}
+.sidebar-toggle-btn a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.sidebar-toggle-btn a:not([href]):not([tabindex]) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.sidebar-toggle-btn a:not([href]):not([tabindex]):hover, a:not([href]):not([tabindex]):focus {
+  color: inherit;
+  text-decoration: none;
+}
+
+.sidebar-toggle-btn a:not([href]):not([tabindex]):focus {
+  outline: 0;
+}
+
+.show {
+  visibility: visible;
+}
+.hide {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s linear 0.33s, opacity 0.33s linear;
+}
+
+.btn-circle {
+  border-radius: 100%;
+  height: 2.5rem;
+  width: 2.5rem;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  margin: 0.25rem;
+  justify-content: center;
+}
+.btn-circle:hover,
+.btn-circle.active 
+{
+  background-color: #4c5872;
+  color: #ffffff;
+}
+
+.btn-circle.btn-sm, .btn-group-sm > .btn-circle.btn {
+  height: 1.8rem;
+  width: 1.8rem;
+  font-size: 0.75rem;
+}
+
+.btn-circle.btn-lg, .btn-group-lg > .btn-circle.btn {
+  height: 3.5rem;
+  width: 3.5rem;
+  font-size: 1.35rem;
 }

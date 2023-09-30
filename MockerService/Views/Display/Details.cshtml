@@ -9,46 +9,62 @@
 }
 
 <div id="wrapper" class="h-100">
-
+    <div class="sidebar-toggle-btn" id="btnToolbar" title="Hide toolbar"> 
+        <a href="javascript:toggleSidebar();"><i class="fas fa-bars"></i></a>
+    </div>
+    
     <!-- Sidebar -->
-    <ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar">
-        <!-- Nav Item - Dashboard -->
-        <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fas fa-fw fa-film"></i></a>
-        </li>
-        <!-- Divider -->
-        <hr class="sidebar-divider"/>
-        <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fa fa-home"></i></a>
-        </li>
-        <li class="nav-item active">
-            <a class="nav-link" href="#"><i class="fas fa-fw fa-border-all"></i></a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fas fa-comment-dots"></i></a>
-        </li>
-        <hr class="sidebar-divider"/>
-        <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fas fa-fw fa-compass"></i></a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fas fa-fw fa-file"></i></a>
-        </li>
-        <hr class="sidebar-divider"/>
-        <li class="nav-item" style="position:absolute; bottom:0px">
-            <a class="nav-link" href="#"><i class="fas fa-user-circle"></i></a>
-        </li>
-    </ul>
+    <div id="mainSidebar">
+        <ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar">
+            
+            <!-- Divider -->
+            <hr class="sidebar-divider"/>
+            <li class="nav-item" id="itemHome">
+                <div class="btn-circle" id="iconHome" title="Go to starting point">
+                    <a class="nav-link" href="javascript: toggleIcon(1);"><i class="fa fa-home"></i></a>
+                </div>
+                
+            </li>
+            <li class="nav-item" id="itemTable">
+                <div class="btn-circle" id="iconTable" title="Show table of contents">
+                    <a class="nav-link" href="javascript: toggleIcon(2);"><i class="fas fa-table"></i></a>
+                </div>
+            </li>
+            <li class="nav-item" id="itemComment">
+                <div class="btn-circle" id="iconComment" title="Show comments">
+                    <a class="nav-link" href="javascript: toggleIcon(3);"><i class="fas fa-comment-dots"></i></a>
+                </div>
+            </li>
+            <hr class="sidebar-divider"/>
+            <li class="nav-item" id="itemHighlight">
+                <div class="btn-circle" id="iconHighlight" title="Turn ON interaction highlight">
+                    <a class="nav-link" href="javascript: toggleHighlight();"><i class="fas fa-fw fa-compass"></i></a>
+                </div>
+            </li>
+            <li class="nav-item" id="itemDesign">
+                <div class="btn-circle" id="iconDesign" title="Turn ON design annotations">
+                    <a class="nav-link" href="javascript: toggleDesign();"><i class="fas fa-fw fa-file"></i></a>
+                </div>
+            </li>
+            <hr class="sidebar-divider"/>
+            <li class="nav-item" style="position:absolute; bottom:0px">
+                <div class="btn-circle">
+                    <a class="nav-link" href="#"><i class="fas fa-user-circle"></i></a>
+                </div>
+            </li>
+        </ul>
+    </div>
+    
     <!-- End of Sidebar -->
 
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
         <!-- Main Content -->
-        <div id="content">
+        <div id="content" class="h-100" >
             <!-- Begin Page Content -->
             <div class="row h-100 px-2">
-                <div class="col-2 bg-white border-right">
+                <div class="col-3 bg-white border-right" id="paneTable">
                     <div class="row bg-gray-200 px-4 py-2">
                         <input type="text" class="w-100" placeholder="Search screens..." />
                     </div>
@@ -83,7 +99,7 @@
 
                     }
                 </div>
-                <div class="col-10 h-100" id="pageContent">
+                <div class="col-9 h-100" id="pageContent">
                 
                 </div>
             </div>
@@ -110,7 +126,7 @@
             } else {
                 imgURL = '@ViewData["baseURL"]/img/iphone7-landscape.svg';
             }
-            html += '<div style="height: 100px"> </div><div class="mx-auto my-auto" style="width:' + project.size.W + 'px; height:' + project.size.H + 'px; background:url(\'' + imgURL + '\'); background-size: ' + project.size.W + 'px ' + project.size.H + 'px; background-repeat:no-repeat">';
+            html += '<div class="mx-auto my-auto" style="width:' + project.size.W + 'px; height:' + project.size.H + 'px; background:url(\'' + imgURL + '\'); background-size: ' + project.size.W + 'px ' + project.size.H + 'px; background-repeat:no-repeat">';
             var curPage = null;
             for (var i in page) {
                 if (page[i].pageTitle == p) {
@@ -218,6 +234,7 @@
             page = @Html.Raw(@pageData);
             current_page = project.MainPage;
             drawPage(project.MainPage);
+            toggleIcon(1);
         });
     </script>
 }
