@@ -122,6 +122,11 @@ function toggleIcon(n) {
   if (n == 1) {
     $("#itemHome").addClass("active");
     $("#iconHome").addClass("active");
+
+    $("#paneTable").removeClass("col-3");
+    $("#paneTable").addClass("hide2");
+    $("#pageContent").removeClass("col-9");
+    $("#pageContent").addClass("col-12");
   }
   if (n == 2) {
     $("#itemTable").addClass("active");
@@ -135,6 +140,11 @@ function toggleIcon(n) {
   if (n == 3) {
     $("#itemComment").addClass("active");
     $("#iconComment").addClass("active");
+    
+    $("#paneTable").addClass("col-3");
+    $("#paneTable").removeClass("hide2");
+    $("#pageContent").addClass("col-9");
+    $("#pageContent").removeClass("col-12");
   }
   iconState = n;
 }
