@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MockerService.Data;
-using MockerService.Entities;
-using MockerService.Services;
 using Microsoft.EntityFrameworkCore;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 using Newtonsoft.Json.Linq;
@@ -12,13 +10,11 @@ namespace MockerService.Controllers
     {
         private readonly MockerServiceContext _context;
         private readonly IHostingEnvironment _hostingEnvironment;
-        private readonly IFileService _uploadService;
 
-        public DisplayController(MockerServiceContext context, IHostingEnvironment hostingEnvironment, IFileService uploadService)
+        public DisplayController(MockerServiceContext context, IHostingEnvironment hostingEnvironment)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment;
-            _uploadService = uploadService;
         }
         public async Task<IActionResult> Main(string? id)
         {
@@ -114,25 +110,6 @@ namespace MockerService.Controllers
             }
             ViewData["pageData"] = pageData + "]";
             return View();
-        }
-
-        [HttpPost("PostSingleFile")]
-        public async Task<ActionResult> PostSingleFile([FromForm] FileUploadModel fileDetails)
-        {
-            if (fileDetails == null)
-            {
-                return BadRequest();
-            }
-
-            try
-            {
-                await _uploadService.PostFileAsync(fileDetails.FileDetails, fileDetails.FileType);
-                return Ok();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
         }
     }
 }

@@ -114,19 +114,64 @@
         var project;
         var page;
         var current_page = "";
+
+        function commonStyle(ob) {
+            var style = "position: absolute; ";
+            if ('x' in ob) style += "left: " + ob.x + "px;";
+            if ('y' in ob) style += "top: " + ob.y + "px;";
+            if ('w' in ob) style += "width: " + ob.w + "px;";
+            if ('h' in ob) style += "height: " + ob.h + "px;";
+            if ('Background' in ob) style += "background: " + ob.Background + ";";
+            if ('BorderColor' in ob) style += "border-color: " + ob.BorderColor + ";";
+            if ('BorderRound' in ob) {
+                style += "border-top-left-radius: " + ob.BorderRound.TopLeft + "px;";
+                style += "border-top-right-radius: " + ob.BorderRound.TopRight + "px;";
+                style += "border-bottom-right-radius: " + ob.BorderRound.BottomRight + "px;";
+                style += "border-bottom-left-radius: " + ob.BorderRound.BottomLeft + "px;";
+            }
+            if ('BorderThickness' in ob) {
+                style += "border-top-width: " + ob.BorderThickness.Top + "px;";
+                style += "border-bottom-width: " + ob.BorderThickness.Bottom + "px;";
+                style += "border-left-width: " + ob.BorderThickness.Left + "px;";
+                style += "border-right-width: " + ob.BorderThickness.Right + "px;";
+            }
+            if ('Foreground' in ob) style += "color: " + ob.Foreground + ";";
+            if ('Opacity' in ob) style += "opacity: " + ob.Opacity + ";";
+            if ('fontSize' in ob) style += "font-size: " + ob.fontSize + "px;";
+            if ('fontFamily' in ob) style += "font-family: '" + ob.fontFamily.Name + "';";
+            return style;
+        }
+
+        function getImageByDevice(device) {
+            if (device == "iPhone 7") {
+                return '@ViewData["baseURL"]/img/iphone7-portrait.svg';
+            }
+            if (device == "iPhone 7 Landscape") {
+                return '@ViewData["baseURL"]/img/iphone7-landscape.svg';
+            }
+            return "";
+        }
+
+        function getDivByDevice(device, bg) {
+            if (device == "iPhone 7") {
+                return '<div style="height: 77%; margin-top:24%; margin-left: 6%; margin-right: 6%; margin-bottom: 24%; position: relative; background-color: ' + bg + '" >';
+            }
+            if (device == "iPhone 7 Landscape") {
+                return '<div style="height: 88%; margin-top:3%; margin-left: 12%; margin-right: 12%; margin-bottom: 3%; position: relative; background-color: ' + bg + '" >';
+            }
+            return '<div style="height: 12%"></div><div style="height: 76%; margin-left: 7%; margin-right: 6%; position: relative; background-color: ' + bg + '" >';
+        }
+
         function drawPage(p) {
             if (p == "") return;
             if (p == null) return;
             if (p == "NULL") return;
             current_page = p;
             var html = "";
-            var imgURL = '@ViewData["baseURL"]/img/iphone7-portrait.svg';
-            if (project.Device == "iPhone 7") {
-                imgURL = '@ViewData["baseURL"]/img/iphone7-portrait.svg';
-            } else {
-                imgURL = '@ViewData["baseURL"]/img/iphone7-landscape.svg';
-            }
+            var imgURL = getImageByDevice(project.Device);
+            
             html += '<div class="mx-auto my-auto" style="width:' + project.size.W + 'px; height:' + project.size.H + 'px; background:url(\'' + imgURL + '\'); background-size: ' + project.size.W + 'px ' + project.size.H + 'px; background-repeat:no-repeat">';
+
             var curPage = null;
             for (var i in page) {
                 if (page[i].pageTitle == p) {
@@ -134,62 +179,16 @@
                     break;
                 }
             }
-            html += ' <div style="height: 12%"></div><div style="height: 76%; margin-left: 7%; margin-right: 6%; position: relative; background-color: ' + curPage.background + '" >'
+            html += getDivByDevice(project.Device, curPage.background);
             var content = curPage.Contents;
             for (var i in content) {
                 if (content[i].Name == "Button") {
-                    var style = "position: absolute; ";
-                    if ('x' in content[i]) style += "left: " + content[i].x + "px;";
-                    if ('y' in content[i]) style += "top: " + content[i].y + "px;";
-                    if ('w' in content[i]) style += "width: " + content[i].w + "px;";
-                    if ('h' in content[i]) style += "height: " + content[i].h + "px;";
-                    if ('Background' in content[i]) style += "background: " + content[i].Background + ";";
-                    if ('BorderColor' in content[i]) style += "border-color: " + content[i].BorderColor + ";";
-                    if ('BorderRound' in content[i]) {
-                        style += "border-top-left-radius: " + content[i].BorderRound.TopLeft + "px;";
-                        style += "border-top-right-radius: " + content[i].BorderRound.TopRight + "px;";
-                        style += "border-bottom-right-radius: " + content[i].BorderRound.BottomRight + "px;";
-                        style += "border-bottom-left-radius: " + content[i].BorderRound.BottomLeft + "px;";
-                    }
-                    if ('BorderThickness' in content[i]) {
-                        style += "border-top-width: " + content[i].BorderThickness.Top + "px;";
-                        style += "border-bottom-width: " + content[i].BorderThickness.Bottom + "px;";
-                        style += "border-left-width: " + content[i].BorderThickness.Left + "px;";
-                        style += "border-right-width: " + content[i].BorderThickness.Right + "px;";
-                    }
-                    if ('Foreground' in content[i]) style += "color: " + content[i].Foreground + ";";
-                    if ('Opacity' in content[i]) style += "opacity: " + content[i].Opacity + ";";
-                    if ('fontSize' in content[i]) style += "font-size: " + content[i].fontSize + "px;";
-                    if ('fontFamily' in content[i]) style += "font-family: '" + content[i].fontFamily.Name + "';";
-
-
+                    var style = commonStyle(content[i]);
                     html += '<input type = "button" value="' + content[i].Text + '" onclick = "drawPage(\'' + content[i].TapEvent + '\');") ondblclick="drawPage(\'' + content[i].DTapEvent + '\');" style = "' + style + '"/>';
                 }
 
                 if (content[i].Name == "TextBox") {
-                    var style = "position: absolute; ";
-                    if ('x' in content[i]) style += "left: " + content[i].x + "px;";
-                    if ('y' in content[i]) style += "top: " + content[i].y + "px;";
-                    if ('w' in content[i]) style += "width: " + content[i].w + "px;";
-                    if ('h' in content[i]) style += "height: " + content[i].h + "px;";
-                    if ('Background' in content[i]) style += "background: " + content[i].Background + ";";
-                    if ('BorderColor' in content[i]) style += "border-color: " + content[i].BorderColor + ";";
-                    if ('BorderRound' in content[i]) {
-                        style += "border-top-left-radius: " + content[i].BorderRound.TopLeft + "px;";
-                        style += "border-top-right-radius: " + content[i].BorderRound.TopRight + "px;";
-                        style += "border-bottom-right-radius: " + content[i].BorderRound.BottomRight + "px;";
-                        style += "border-bottom-left-radius: " + content[i].BorderRound.BottomLeft + "px;";
-                    }
-                    if ('BorderThickness' in content[i]) {
-                        style += "border-top-width: " + content[i].BorderThickness.Top + "px;";
-                        style += "border-bottom-width: " + content[i].BorderThickness.Bottom + "px;";
-                        style += "border-left-width: " + content[i].BorderThickness.Left + "px;";
-                        style += "border-right-width: " + content[i].BorderThickness.Right + "px;";
-                    }
-                    if ('Foreground' in content[i]) style += "color: " + content[i].Foreground + ";";
-                    if ('fontFamily' in content[i]) style += "font-family: '" + content[i].fontFamily.Name + "';";
-                    if ('Opacity' in content[i]) style += "opacity: " + content[i].Opacity + ";";
-                    if ('fontSize' in content[i]) style += "font-size: " + content[i].fontSize + "px;";
+                    var style = commonStyle(content[i]);
                     if ('isBold' in content[i] && content[i].isBold == true ) style += "font-weight: bold;";
                     if ('isItalic' in content[i] && content[i].isItalic == true) style += "font-style: italic;";
 
@@ -197,36 +196,14 @@
                 }
 
                 if (content[i].Name == "Label") {
-                    var style = "position: absolute; ";
-                    if ('x' in content[i]) style += "left: " + content[i].x + "px;";
-                    if ('y' in content[i]) style += "top: " + content[i].y + "px;";
-                    if ('w' in content[i]) style += "width: " + content[i].w + "px;";
-                    if ('h' in content[i]) style += "height: " + content[i].h + "px;";
-                    if ('Background' in content[i]) style += "background: " + content[i].Background + ";";
-                    if ('BorderColor' in content[i]) style += "border-color: " + content[i].BorderColor + ";";
-                    if ('BorderRound' in content[i]) {
-                        style += "border-top-left-radius: " + content[i].BorderRound.TopLeft + "px;";
-                        style += "border-top-right-radius: " + content[i].BorderRound.TopRight + "px;";
-                        style += "border-bottom-right-radius: " + content[i].BorderRound.BottomRight + "px;";
-                        style += "border-bottom-left-radius: " + content[i].BorderRound.BottomLeft + "px;";
-                    }
-                    if ('BorderThickness' in content[i]) {
-                        style += "border-top-width: " + content[i].BorderThickness.Top + "px;";
-                        style += "border-bottom-width: " + content[i].BorderThickness.Bottom + "px;";
-                        style += "border-left-width: " + content[i].BorderThickness.Left + "px;";
-                        style += "border-right-width: " + content[i].BorderThickness.Right + "px;";
-                    }
-                    if ('Foreground' in content[i]) style += "color: " + content[i].Foreground + ";";
-                    if ('fontFamily' in content[i]) style += "font-family: '" + content[i].fontFamily.Name + "';";
-                    if ('Opacity' in content[i]) style += "opacity: " + content[i].Opacity + ";";
-                    if ('fontSize' in content[i]) style += "font-size: " + content[i].fontSize + "px;";
+                    var style = commonStyle(content[i]);
                     if ('isBold' in content[i] && content[i].isBold == true ) style += "font-weight: bold;";
                     if ('isItalic' in content[i] && content[i].isItalic == true) style += "font-style: italic;";
 
                     html += '<Label style = "' + style + '">' + content[i].Text + '</Label>';
                 }
             }
-            html += '</div><div style="height: 12%"></div></div>';
+            html += '</div></div>';
             $("#pageContent").html(html);
         }
         $(document).ready(function() {

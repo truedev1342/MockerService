@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MockerService.Models;
-using MockerService.Entities;
 
 namespace MockerService.Data
 {
@@ -16,6 +15,5 @@ namespace MockerService.Data
         }
 
         public DbSet<MockerService.Models.Project> Project { get; set; }
-        public DbSet<FileDetails> FileDetails { get; set; }
     }
 }

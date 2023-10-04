@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MockerService.Data;
 using MockerService.Models;
@@ -13,6 +8,7 @@ namespace MockerService.Controllers
     public class ProjectsController : Controller
     {
         private readonly MockerServiceContext _context;
+        private static Random random = new Random();
 
         public ProjectsController(MockerServiceContext context)
         {
@@ -148,6 +144,89 @@ namespace MockerService.Controllers
         private bool ProjectExists(int id)
         {
             return _context.Project.Any(e => e.Id == id);
+        }
+
+        private static string RandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        // GET: Projects/TestUpload
+        public IActionResult TestUpload()
+        {
+            SingleFileModel model = new SingleFileModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        public JsonResult Upload(SingleFileModel model)
+        {
+            //if (ModelState.IsValid)
+            model.IsResponse = true;
+
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
+
+            //create folder if not exist
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            //get file extension
+            FileInfo fileInfo = new FileInfo(model.File.FileName);
+            string randName = RandomString(20);
+            string fileName = randName + fileInfo.Extension;
+
+            string fileNameWithPath = Path.Combine(path, fileName);
+
+            using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
+            {
+                model.File.CopyTo(stream);
+            }
+            var extractPath = Path.Combine(path, randName);
+            if (!Directory.Exists(extractPath))
+                Directory.CreateDirectory(extractPath);
+
+            System.IO.Compression.ZipFile.ExtractToDirectory(fileNameWithPath, extractPath);
+            ResponseModel res = new ResponseModel();
+            res.IsSuccess = true;
+            res.Message = randName;
+            res.IsResponse = true;
+            return Json(res);
+        }
+
+        [HttpPost]
+        public JsonResult MultiUpload(MultipleFilesModel model)
+        {
+            model.IsResponse = true;
+            if (model.Files.Count > 0)
+            {
+                foreach (var file in model.Files)
+                {
+
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Files");
+
+                    //create folder if not exist
+                    if (!Directory.Exists(path))
+                        Directory.CreateDirectory(path);
+
+
+                    string fileNameWithPath = Path.Combine(path, file.FileName);
+
+                    using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+                }
+                model.IsSuccess = true;
+                model.Message = "Files upload successfully";
+            }
+            else
+            {
+                model.IsSuccess = false;
+                model.Message = "Please select files";
+            }
+            return Json(model);
         }
     }
 }

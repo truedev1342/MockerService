@@ -119,6 +119,14 @@ function toggleIcon(n) {
   $("#iconHome").removeClass("active");
   $("#iconTable").removeClass("active");
   $("#iconComment").removeClass("active");
+  if (iconState == n) {
+    $("#paneTable").removeClass("col-3");
+    $("#paneTable").addClass("hide2");
+    $("#pageContent").removeClass("col-9");
+    $("#pageContent").addClass("col-12");
+    iconState = 0;
+    return;
+  }
   if (n == 1) {
     $("#itemHome").addClass("active");
     $("#iconHome").addClass("active");

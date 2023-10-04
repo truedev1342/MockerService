@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MockerService.Data;
-using MockerService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +9,6 @@ builder.Services.AddDbContext<MockerServiceContext>(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddScoped<IFileService, FileService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
