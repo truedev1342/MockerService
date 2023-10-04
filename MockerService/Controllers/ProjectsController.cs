@@ -56,6 +56,14 @@ namespace MockerService.Controllers
             {
                 _context.Add(project);
                 await _context.SaveChangesAsync();
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
+                var extractPath = Path.Combine(path, project.path);
+                if (!Directory.Exists(extractPath))
+                {
+                    Directory.CreateDirectory(extractPath);
+                    string fileNameWithPath = Path.Combine(path, project.path + ".zip");
+                    System.IO.Compression.ZipFile.ExtractToDirectory(fileNameWithPath, extractPath);
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(project);
@@ -153,6 +161,19 @@ namespace MockerService.Controllers
                 .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
+        private static bool isValidFileType(string ext)
+        {
+            if (ext == "zip") return true;
+            if (ext == "Zip") return true;
+            if (ext == "zIp") return true;
+            if (ext == "ziP") return true;
+            if (ext == "ZIp") return true;
+            if (ext == "ZiP") return true;
+            if (ext == "zIP") return true;
+            if (ext == "ZIP") return true;
+            return false;
+        }
+
         // GET: Projects/TestUpload
         public IActionResult TestUpload()
         {
@@ -163,6 +184,7 @@ namespace MockerService.Controllers
         [HttpPost]
         public JsonResult Upload(SingleFileModel model)
         {
+            ResponseModel res = new ResponseModel();
             //if (ModelState.IsValid)
             model.IsResponse = true;
 
@@ -174,8 +196,15 @@ namespace MockerService.Controllers
 
             //get file extension
             FileInfo fileInfo = new FileInfo(model.File.FileName);
+            if (isValidFileType(fileInfo.Extension))
+            {
+                res.IsSuccess = false;
+                res.Message = "Invalid file type";
+                res.IsResponse = true;
+                return Json(res);
+            }
             string randName = RandomString(20);
-            string fileName = randName + fileInfo.Extension;
+            string fileName = randName + ".zip";
 
             string fileNameWithPath = Path.Combine(path, fileName);
 
@@ -183,12 +212,7 @@ namespace MockerService.Controllers
             {
                 model.File.CopyTo(stream);
             }
-            var extractPath = Path.Combine(path, randName);
-            if (!Directory.Exists(extractPath))
-                Directory.CreateDirectory(extractPath);
-
-            System.IO.Compression.ZipFile.ExtractToDirectory(fileNameWithPath, extractPath);
-            ResponseModel res = new ResponseModel();
+            
             res.IsSuccess = true;
             res.Message = randName;
             res.IsResponse = true;
